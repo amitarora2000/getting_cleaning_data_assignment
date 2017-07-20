@@ -38,22 +38,16 @@ activities <- read.table("activity_labels.txt")
 
 mean_and_std_features <- grep("-(mean|std)\\(\\)", features[, 2])
 x_desired <- x_merged[,mean_and_std_features]
-#names(x_desired) <- features[mean_and_std_features,2]
-
 y_merged[,1] <- activities[y_merged[,1],2]
-#names(y_merged) <- c("participant_activity")
-
-#names(subject_merged) <- c("test_partcipants")
-
 
 # Step 3: combine all the data & add column names
-
 final_data <- cbind(subject_merged,y_merged, x_desired)
 names(final_data) <- c("test_participants", "participant_activity", as.character(features[mean_and_std_features,2]))
 
 
 # Step 4: Create independent tidy data set with the average of each variable for each activity and each subject
 
+#ignoring first two columns - subjects & activity - to calculate mean
 average_data <- ddply(final_data, .(test_participants, participant_activity), function(x) colMeans(x[,3:68]))
 write.table(average_data, "tidy_data.txt", row.name=FALSE)
 
